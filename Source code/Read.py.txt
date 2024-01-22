@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from time import sleep
+import pygame.mixer
+
+reader = SimpleMFRC522()
+pygame.mixer.init()
+
+base_sound = "/home/pi0/Documents/Sound/"
+
+def play_mp3_loop(file_path):
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play(-1)
+    
+def stop_mp3():
+    pygame.mixer.music.stop()
+
+try:
+    curr_id = None
+    while True:
+        (id, text) = reader.read()
+        if curr_id != rd:
+            if text:
+                print(id)
+                print(text)
+                file_path = base_sound + text.strip()
+                stop_mp3()
+                play_mp3_loop(file_path)
+            curr_id = id
+        sleep(0.1)
